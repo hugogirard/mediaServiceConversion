@@ -6,6 +6,7 @@ on:
       - "main"
     paths:
       - "bicep/**/*.bicep"
+      - ".github/workflows/infra.yml"
   workflow_dispatch:
 
 jobs:
@@ -21,14 +22,14 @@ jobs:
       
       - uses: actions/checkout@v2
 
-      - name: Validate that bicep builds
-        run: az bicep build -f main.bicep
-        working-directory: ./bicep
-
       - name: Azure Login
         uses: Azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}      
+
+      - name: Validate that bicep builds
+        run: az bicep build -f main.bicep
+        working-directory: ./bicep
 
       - name: deploy
         id: createResources
