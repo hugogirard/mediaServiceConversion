@@ -9,9 +9,6 @@ resource storageAccountLogicApp 'Microsoft.Storage/storageAccounts@2021-04-01' =
   sku: {
     name: 'Standard_LRS'
   }
-  tags: {
-    'description': 'Logic App Storage and Function'
-  }  
   kind: 'StorageV2'
   properties: {    
     accessTier: 'Hot'

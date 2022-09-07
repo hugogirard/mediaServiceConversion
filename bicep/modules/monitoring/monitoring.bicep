@@ -20,6 +20,3 @@ resource insight 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 output insightName string = insight.name
-
-// output insightCnxString string = insight.properties.ConnectionString
-// output insightKey string = insight.properties.InstrumentationKey
