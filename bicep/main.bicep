@@ -19,3 +19,23 @@ module monitoring 'modules/monitoring/monitoring.bicep' = {
     suffix: spokeConversionSuffix
   }
 }
+
+module storage 'modules/storage/storage.bicep' = {
+  scope: resourceGroup(spokeRg.name)
+  name: 'storage'
+  params: {
+    location: location
+    suffix: spokeConversionSuffix
+  }
+}
+
+module logicApp 'modules/logic/logicapp.bicep' = {
+  scope: resourceGroup(spokeRg.name)
+  name: ''
+  params: {
+    appInsightName: monitoring.outputs.insightName
+    location: location
+    storageName: storage.outputs.strName
+    suffix: spokeConversionSuffix
+  }
+}
