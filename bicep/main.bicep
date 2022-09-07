@@ -31,7 +31,7 @@ module storage 'modules/storage/storage.bicep' = {
 
 module logicApp 'modules/logic/logicapp.bicep' = {
   scope: resourceGroup(spokeRg.name)
-  name: ''
+  name: 'logicApp'
   params: {
     appInsightName: monitoring.outputs.insightName
     location: location
