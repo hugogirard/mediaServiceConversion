@@ -27,9 +27,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}      
 
-      # - name: Validate that bicep builds
-      #   run: az bicep build -f main.bicep
-      #   working-directory: ./bicep
+      - name: Validate that bicep builds
+        run: bicep build ./bicep/main.bicep
+        working-directory: ./bicep
 
       - name: deploy
         id: createResources
@@ -39,5 +39,5 @@ jobs:
           scope: subscription
           region: ${{ env.LOCATION }}
           deploymentName:  ${{ env.DEPLOYMENT_NAME }}
-          template: ./bicep/main.bicep
+          template: ./bicep/main.json
           parameters: location=${{ env.LOCATION }}
