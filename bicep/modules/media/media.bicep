@@ -4,7 +4,7 @@ param storageId string
 param userAssignedIdentityId object
 
 resource media 'Microsoft.Media/mediaservices@2021-11-01' = {
-  name: 'mediasrv-${suffix}'
+  name: 'mediasrv${suffix}'
   location: location
   identity: {
     type: 'UserAssigned'
