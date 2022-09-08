@@ -35,7 +35,7 @@ module logicApp 'modules/logic/logicapp.bicep' = {
   params: {
     appInsightName: monitoring.outputs.insightName
     location: location
-    storageName: storage.outputs.strName
+    storageName: storage.outputs.strLogicAppName
     suffix: spokeConversionSuffix
   }
 }
@@ -47,5 +47,27 @@ module webapp 'modules/web/webapp.bicep' = {
     appInsightName: monitoring.outputs.insightName
     location: location
     suffix: spokeConversionSuffix
+  }
+}
+
+module userIdentity 'modules/identity/userassigned.bicep' = {
+  scope: resourceGroup(spokeRg.name)
+  name: 'identity'
+  params: {
+    location: location
+    suffix: spokeConversionSuffix
+  }
+}
+
+module mediaService 'modules/media/media.bicep' = {
+  scope: resourceGroup(spokeRg.name)
+  name: 'mediaService'
+  params: {
+    location: location
+    storageId: storage.outputs.strMediaId
+    suffix: spokeConversionSuffix
+    userAssignedIdentityId: {
+      '${userIdentity.outputs.userAssignedIdentityId}': {}
+    }
   }
 }
