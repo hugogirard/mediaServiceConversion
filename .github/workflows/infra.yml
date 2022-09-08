@@ -28,7 +28,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}      
 
       - name: Validate that bicep builds
-        run: bicep build ./bicep/main.bicep
+        run: bicep build main.bicep
         working-directory: ./bicep
 
       - name: deploy
