@@ -39,3 +39,13 @@ module logicApp 'modules/logic/logicapp.bicep' = {
     suffix: spokeConversionSuffix
   }
 }
+
+module webapp 'modules/web/webapp.bicep' = {
+  scope: resourceGroup(spokeRg.name)
+  name: 'webapp'
+  params: {
+    appInsightName: monitoring.outputs.insightName
+    location: location
+    suffix: spokeConversionSuffix
+  }
+}
