@@ -16,10 +16,10 @@ namespace Contoso
     public static class GetUploadedVideo
     {
         [FunctionName("GetUploadedVideo")]
-        public static async Task Run([EventGridTrigger]EventGridEvent eventGridEvent, 
-                                     [Blob("{data.url}",FileAccess.Read,Connection = "StrCnx")] BlobClient blobClient,
+        public static async Task Run([EventGridTrigger]EventGridEvent eventGridEvent,                    
                                      ILogger log)
         {
+            //                   [Blob("{data.url}",FileAccess.Read,Connection = "StrCnx")] BlobClient blobClient,
             var stringify = JsonConvert.SerializeObject(eventGridEvent);
             log.LogInformation(stringify);
             //BlobProperties properties = await blobClient.GetPropertiesAsync();            

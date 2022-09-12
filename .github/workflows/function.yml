@@ -49,13 +49,13 @@ jobs:
         app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
         package: '${{ env.AZURE_FUNCTION_PACKAGE_PATH }}/output'              
 
-    - name: Deploy Event Grid Subs      
-      uses: Azure/arm-deploy@v1.0.1
-      with:        
-        scope: resourcegroup          
-        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-        region: ${{ env.LOCATION }}        
-        resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_MEDIA_SPOKE_NAME }}        
-        template: bicep/event.bicep   
-        parameters: location=${{ env.LOCATION }} functionId=${{ secrets.AZURE_FUNCTION_ID }} storageId=${{ secrets.AZURE_STORAGE_MEDIA_ID }} storageName=${{ secrets.AZURE_STORAGE_MEDIA_NAME }}
-        deploymentMode: Incremental                
+    # - name: Deploy Event Grid Subs      
+    #   uses: Azure/arm-deploy@v1.0.1
+    #   with:        
+    #     scope: resourcegroup          
+    #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+    #     region: ${{ env.LOCATION }}        
+    #     resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_MEDIA_SPOKE_NAME }}        
+    #     template: bicep/event.bicep   
+    #     parameters: location=${{ env.LOCATION }} functionId=${{ secrets.AZURE_FUNCTION_ID }} storageId=${{ secrets.AZURE_STORAGE_MEDIA_ID }} storageName=${{ secrets.AZURE_STORAGE_MEDIA_NAME }}
+    #     deploymentMode: Incremental                
