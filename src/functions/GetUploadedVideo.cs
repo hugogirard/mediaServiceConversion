@@ -10,6 +10,8 @@ using Azure.Storage.Blobs;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs.Models;
 using Newtonsoft.Json;
+using functions.Models;
+using System.Linq;
 
 namespace Contoso
 {
@@ -19,9 +21,16 @@ namespace Contoso
         public static async Task Run([EventGridTrigger]EventGridEvent eventGridEvent,                    
                                      ILogger log)
         {
-            //                   [Blob("{data.url}",FileAccess.Read,Connection = "StrCnx")] BlobClient blobClient,
-            var stringify = JsonConvert.SerializeObject(eventGridEvent);
-            log.LogInformation(stringify);
+            // Validate the event type
+            if (eventGridEvent.EventType == "Microsoft.Storage.BlobCreated") 
+            {
+                string[] paths = eventGridEvent.Subject.Split('/');
+                string filename = paths.Last();
+                var @event = JsonConvert.DeserializeObject<EventBlobStorage>(eventGridEvent.Data.ToString());
+                log.LogInformation(JsonConvert.SerializeObject(@event));
+                log.LogInformation(filename);
+            }
+
             //BlobProperties properties = await blobClient.GetPropertiesAsync();            
         }
     }
