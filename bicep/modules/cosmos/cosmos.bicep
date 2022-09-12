@@ -25,3 +25,19 @@ resource cosmosSql 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-05-1
     }
   }
 }
+
+resource containerMediaInsights 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-05-15' = {
+  parent: cosmosSql
+  name: 'mediaInsights'
+  properties: {
+    resource: {
+      id: 'mediaInsights'
+      partitionKey: {
+        paths: [          
+            '/id'          
+        ]
+        kind: 'Hash'       
+      }
+    }    
+  }
+}
