@@ -58,6 +58,7 @@ module function 'modules/functions/function.bicep' = {
     strAccountName: storage.outputs.strFunctionAppName
     suffix: spokeConversionSuffix
     cosmosDbName: cosmos.outputs.cosmosDbName
+    strMediaName: storage.outputs.strMediaName
   }
 }
 
