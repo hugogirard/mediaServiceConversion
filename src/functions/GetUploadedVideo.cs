@@ -20,8 +20,7 @@ namespace Contoso
                                      ILogger log)
         {
             log.LogInformation(eventGridEvent.Data.ToString());
-            BlobProperties properties = await blobClient.GetPropertiesAsync();
-            
+            //BlobProperties properties = await blobClient.GetPropertiesAsync();            
         }
     }
 }
