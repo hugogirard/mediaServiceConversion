@@ -50,6 +50,10 @@ resource storageMedia 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   }  
 }
 
+resource containerVideo 'Microsoft.Storage/storageAccounts/blobServices/containers@2019-06-01' = {
+  name: '${storageMedia.name}/default/videos'  
+}
+
 output strFunctionAppName string = storageFunction.name
 output strMediaId string = storageMedia.id
 output strMediaName string = storageMedia.name
