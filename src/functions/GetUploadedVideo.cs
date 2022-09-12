@@ -12,13 +12,19 @@ using Azure.Storage.Blobs.Models;
 using Newtonsoft.Json;
 using functions.Models;
 using System.Linq;
+using Contoso.Infrastructure.Models;
 
 namespace Contoso
 {
     public static class GetUploadedVideo
     {
         [FunctionName("GetUploadedVideo")]
-        public static async Task Run([EventGridTrigger]EventGridEvent eventGridEvent,                    
+        public static async Task Run([EventGridTrigger]EventGridEvent eventGridEvent,
+                                     [Blob("{data.url}", FileAccess.Read, Connection = "StrMediaCnxString")] BlobClient blobClient,
+                                     [CosmosDB(databaseName: "ToDoItems",
+                                               collectionName: "Items",
+                                               ConnectionStringSetting = "CosmosDBConnection")]
+                                               IAsyncCollector<VideoEncodingJob> videos,
                                      ILogger log)
         {
             // Validate the event type

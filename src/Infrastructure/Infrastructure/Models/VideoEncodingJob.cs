@@ -9,4 +9,9 @@ public class VideoEncodingJob
     public DateTime CompletedTime { get; set; }
 
     public VideoMetadata FileMetadata { get; set; }
+
+    public VideoEncodingJob()
+    {
+        FileMetadata = new VideoMetadata();
+    }
 }

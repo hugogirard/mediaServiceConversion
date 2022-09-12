@@ -83,6 +83,15 @@ module mediaService 'modules/media/media.bicep' = {
   }
 }
 
+module cosmos 'modules/cosmos/cosmos.bicep' = {
+  scope: resourceGroup(spokeRg.name)
+  name: 'cosmos'
+  params: {
+    location: location
+    suffix: spokeConversionSuffix
+  }
+}
+
 output functionName string = function.outputs.functionName
 output functionId string = function.outputs.functionId
 output storageId string = storage.outputs.strMediaId
