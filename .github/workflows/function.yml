@@ -53,7 +53,7 @@ jobs:
       uses: Azure/arm-deploy@v1.0.1
       with:        
         scope: resourcegroup          
-        subscriptionId: ${{ secrets.SUBSCRIPTION_ID }}
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         region: ${{ env.LOCATION }}        
         resourceGroupName: ${{ secrets.AZURE_RESOURCE_GROUP_MEDIA_SPOKE_NAME }}        
         template: bicep/event.bicep   
