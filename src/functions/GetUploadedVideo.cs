@@ -9,6 +9,7 @@ using System.IO;
 using Azure.Storage.Blobs;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs.Models;
+using Newtonsoft.Json;
 
 namespace Contoso
 {
@@ -19,7 +20,8 @@ namespace Contoso
                                      [Blob("{data.url}",FileAccess.Read,Connection = "StrCnx")] BlobClient blobClient,
                                      ILogger log)
         {
-            log.LogInformation(eventGridEvent.Data.ToString());
+            var stringify = JsonConvert.SerializeObject(eventGridEvent);
+            log.LogInformation(stringify);
             //BlobProperties properties = await blobClient.GetPropertiesAsync();            
         }
     }

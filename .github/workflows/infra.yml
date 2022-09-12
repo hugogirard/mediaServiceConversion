@@ -41,3 +41,9 @@ jobs:
           deploymentName:  ${{ env.DEPLOYMENT_NAME }}
           template: ./bicep/main.json
           parameters: location=${{ env.LOCATION }}
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_FUNCTIONAPP_NAME
+          value: ${{ steps.createResources.outputs.functionName }}
+          pa_token: ${{ secrets.PA_TOKEN }}                  

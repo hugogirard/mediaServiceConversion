@@ -82,3 +82,5 @@ module mediaService 'modules/media/media.bicep' = {
     }
   }
 }
+
+output functionName string = function.outputs.functionName
