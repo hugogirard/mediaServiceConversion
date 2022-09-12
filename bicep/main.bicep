@@ -84,3 +84,7 @@ module mediaService 'modules/media/media.bicep' = {
 }
 
 output functionName string = function.outputs.functionName
+output functionId string = function.outputs.functionId
+output storageId string = storage.outputs.strMediaId
+output storageName string = storage.outputs.strMediaName
+output resourceGroupName string = spokeRg.name

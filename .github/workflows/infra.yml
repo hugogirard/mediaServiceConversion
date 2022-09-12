@@ -46,4 +46,28 @@ jobs:
         with:
           name: AZURE_FUNCTIONAPP_NAME
           value: ${{ steps.createResources.outputs.functionName }}
-          pa_token: ${{ secrets.PA_TOKEN }}                  
+          pa_token: ${{ secrets.PA_TOKEN }}            
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_FUNCTION_ID
+          value: ${{ steps.createResources.outputs.functionId }}
+          pa_token: ${{ secrets.PA_TOKEN }}                
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_STORAGE_MEDIA_ID
+          value: ${{ steps.createResources.outputs.storageId }}
+          pa_token: ${{ secrets.PA_TOKEN }} 
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_STORAGE_MEDIA_NAME
+          value: ${{ steps.createResources.outputs.storageName }}
+          pa_token: ${{ secrets.PA_TOKEN }}         
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_RESOURCE_GROUP_MEDIA_SPOKE_NAME
+          value: ${{ steps.createResources.outputs.resourceGroupName }}
+          pa_token: ${{ secrets.PA_TOKEN }}                   

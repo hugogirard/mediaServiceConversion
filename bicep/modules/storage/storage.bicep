@@ -51,6 +51,5 @@ resource storageMedia 'Microsoft.Storage/storageAccounts@2021-04-01' = {
 }
 
 output strFunctionAppName string = storageFunction.name
-
-//output strLogicAppName string = storageAccountLogicApp.name
 output strMediaId string = storageMedia.id
+output strMediaName string = storageMedia.name

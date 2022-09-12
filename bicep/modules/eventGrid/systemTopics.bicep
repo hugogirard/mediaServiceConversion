@@ -5,8 +5,6 @@ param storageId string
 
 var topicName = '${storageName}-${guid(subscription().subscriptionId)}'
 
-var functionMethodName = 'GetUploadedVideo'
-
 resource systemTopic 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
   name: topicName
   location: location
@@ -16,20 +14,33 @@ resource systemTopic 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
   }
 }
 
-// resource eventSubscription 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2021-12-01' = {
-//   parent: systemTopic
-//   name: 'ToAzureFuncSubs'
-//   properties: {
-//     destination: {
-//       properties: {
-//         resourceId: '${functionId}/functions/${functionMethodName}'
-//       }
-//       endpointType: 'AzureFunction'
-//     }
-//     filter: {
-//       includedEventTypes: [
-//         'Microsoft.Storage.BlobCreated'
-//       ]
-//     }
-//   }
-// }
+resource eventSubs 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
+  name: '${topicName}/ToAzureFuncSubs'
+  dependsOn: [
+    systemTopic
+  ]
+  properties: {
+    destination: {
+      properties: {
+        resourceId: '${functionId}/functions/ProcessFile'
+      }
+      endpointType: 'AzureFunction'
+    }
+    filter: {
+      includedEventTypes: [
+        'Microsoft.Storage.BlobCreated'      
+      ]
+      enableAdvancedFilteringOnArrays: true
+      advancedFilters: [
+        {
+          values: [
+            'containers/videos/'            
+          ]
+          operatorType: 'StringContains'
+          key: 'Subject'
+        }        
+      ]
+    }
+    eventDeliverySchema: 'EventGridSchema'    
+  }
+}
