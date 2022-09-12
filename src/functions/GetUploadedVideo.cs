@@ -32,9 +32,26 @@ namespace Contoso
             {
                 string[] paths = eventGridEvent.Subject.Split('/');
                 string filename = paths.Last();
+
+                var sasVideo = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read, 
+                                                         DateTime.UtcNow.AddDays(1));
+
                 var @event = JsonConvert.DeserializeObject<EventBlobStorage>(eventGridEvent.Data.ToString());
-                log.LogInformation(JsonConvert.SerializeObject(@event));
-                log.LogInformation(filename);
+                log.LogInformation(sasVideo.ToString());
+
+                var videoJobEncoding = new VideoEncodingJob()
+                {
+                    StartedTime = DateTime.UtcNow,
+                    Id = Guid.NewGuid().ToString(),
+                    FileMetadata = new VideoMetadata() 
+                    { 
+                      Name = filename
+                    }
+                };
+                //log.LogInformation(JsonConvert.SerializeObject(@event));
+                log.LogInformation(JsonConvert.SerializeObject(videoJobEncoding));
+
+                await videos.AddAsync(videoJobEncoding);
             }
 
             //BlobProperties properties = await blobClient.GetPropertiesAsync();            

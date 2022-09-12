@@ -40,6 +40,15 @@ module storage 'modules/storage/storage.bicep' = {
 //   }
 // }
 
+module cosmos 'modules/cosmos/cosmos.bicep' = {
+  scope: resourceGroup(spokeRg.name)
+  name: 'cosmos'
+  params: {
+    location: location
+    suffix: spokeConversionSuffix
+  }
+}
+
 module function 'modules/functions/function.bicep' = {
   scope: resourceGroup(spokeRg.name)
   name: 'function'
@@ -48,6 +57,7 @@ module function 'modules/functions/function.bicep' = {
     location: location
     strAccountName: storage.outputs.strFunctionAppName
     suffix: spokeConversionSuffix
+    cosmosDbName: cosmos.outputs.cosmosDbName
   }
 }
 
@@ -80,15 +90,6 @@ module mediaService 'modules/media/media.bicep' = {
     userAssignedIdentityId: {
       '${userIdentity.outputs.userAssignedIdentityId}': {}
     }
-  }
-}
-
-module cosmos 'modules/cosmos/cosmos.bicep' = {
-  scope: resourceGroup(spokeRg.name)
-  name: 'cosmos'
-  params: {
-    location: location
-    suffix: spokeConversionSuffix
   }
 }
 

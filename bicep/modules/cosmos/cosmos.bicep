@@ -41,3 +41,5 @@ resource containerMediaInsights 'Microsoft.DocumentDB/databaseAccounts/sqlDataba
     }    
   }
 }
+
+output cosmosDbName string = cosmos.name

@@ -1,7 +1,9 @@
 param location string
 param suffix string
 param strAccountName string
+param strMediaName string
 param appInsightName string
+param cosmosDbName string
 
 var appServiceName = 'plan-function-${suffix}'
 
@@ -11,6 +13,14 @@ resource insight 'Microsoft.Insights/components@2020-02-02' existing = {
 
 resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
   name: strAccountName 
+}
+
+resource storageMedia 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
+  name: strMediaName 
+}
+
+resource cosmos 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' existing = {
+  name: cosmosDbName
 }
 
 resource serverFarm 'Microsoft.Web/serverfarms@2020-06-01' = {
@@ -63,6 +73,14 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'WEBSITE_NODE_DEFAULT_VERSION'
           value: '~12'
+        }
+        {
+          name: 'StrMediaCnxString'
+          value: 'DefaultEndpointsProtocol=https;AccountName=${storageMedia.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${listKeys(storageMedia.id, storageMedia.apiVersion).keys[0].value}'
+        }
+        {
+          name: 'CosmosDBConnection'
+          value: '${cosmos.listConnectionStrings().connectionStrings}'
         }
       ]
     }
