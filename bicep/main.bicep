@@ -29,13 +29,24 @@ module storage 'modules/storage/storage.bicep' = {
   }
 }
 
-module logicApp 'modules/logic/logicapp.bicep' = {
+// module logicApp 'modules/logic/logicapp.bicep' = {
+//   scope: resourceGroup(spokeRg.name)
+//   name: 'logicApp'
+//   params: {
+//     appInsightName: monitoring.outputs.insightName
+//     location: location
+//     storageName: storage.outputs.strLogicAppName
+//     suffix: spokeConversionSuffix
+//   }
+// }
+
+module function 'modules/functions/function.bicep' = {
   scope: resourceGroup(spokeRg.name)
-  name: 'logicApp'
+  name: 'function'
   params: {
     appInsightName: monitoring.outputs.insightName
     location: location
-    storageName: storage.outputs.strLogicAppName
+    strAccountName: storage.outputs.strFunctionAppName
     suffix: spokeConversionSuffix
   }
 }
