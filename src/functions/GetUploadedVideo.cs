@@ -37,14 +37,16 @@ namespace Contoso
             // Validate the event type
             if (eventGridEvent.EventType == "Microsoft.Storage.BlobCreated")
             {
-                string[] paths = eventGridEvent.Subject.Split('/');
-                string filename = paths.Last();
+                // Retrieve metadata of the video
+                BlobProperties properties = await blobClient.GetPropertiesAsync();
+
+                string videoName = properties.Metadata.FirstOrDefault(d => d.Key == "name").Value;
+                string videoDescription = properties.Metadata.FirstOrDefault(d => d.Key == "description").Value;
 
                 var sasVideo = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read,
                                                          DateTime.UtcNow.AddDays(1));
 
                 log.LogDebug(eventGridEvent.Data.ToString());
-                //log.LogInformation(sasVideo.ToString());
 
                 var videoJobEncoding = new VideoEncodingJob()
                 {
@@ -52,7 +54,9 @@ namespace Contoso
                     Id = Guid.NewGuid().ToString(),
                     FileMetadata = new VideoMetadata()
                     {
-                        Name = filename
+                        Name = videoName,
+                        Description = videoDescription,
+                        Filename = blobClient.Name
                     }
                 };
 
@@ -70,7 +74,7 @@ namespace Contoso
 
             }
 
-            //BlobProperties properties = await blobClient.GetPropertiesAsync();            
+            //       
         }
     }
 }
