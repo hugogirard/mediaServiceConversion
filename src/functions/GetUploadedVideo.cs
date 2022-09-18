@@ -18,11 +18,11 @@ namespace Contoso
 {
     public class GetUploadedVideo
     {
-        private readonly IMediaServiceFactory _mediaServiceFactory;
+        private readonly IMediaService _mediaService;
 
-        public GetUploadedVideo(IMediaServiceFactory mediaServiceFactory)
+        public GetUploadedVideo(IMediaService mediaService)
         {
-            _mediaServiceFactory = mediaServiceFactory;
+            _mediaService = mediaService;
         }
 
         [FunctionName("GetUploadedVideo")]
@@ -48,23 +48,10 @@ namespace Contoso
 
                 log.LogDebug(eventGridEvent.Data.ToString());
 
-                var videoJobEncoding = new VideoEncodingJob()
-                {
-                    StartedTime = DateTime.UtcNow,
-                    Id = Guid.NewGuid().ToString(),
-                    FileMetadata = new VideoMetadata()
-                    {
-                        Name = videoName,
-                        Description = videoDescription,
-                        Filename = blobClient.Name
-                    }
-                };
-
-                log.LogInformation(JsonConvert.SerializeObject(videoJobEncoding));
-
                 try
                 {
-                    var client = await _mediaServiceFactory.GetMediaServiceClientAsync();
+                    VideoEncodingJob videoJobEncoding = await _mediaService.SubmitJobAsync(sasVideo, videoName, videoDescription, blobClient.Name);
+
                     await videos.AddAsync(videoJobEncoding);
                 }
                 catch (Exception ex)
@@ -72,9 +59,7 @@ namespace Contoso
                     log.LogError(ex.Message, ex);
                 }
 
-            }
-
-            //       
+            }                 
         }
     }
 }

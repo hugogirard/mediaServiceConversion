@@ -20,5 +20,6 @@ public class VideoEncodingJob
         FileMetadata.Name = videoName;
         FileMetadata.Description = videoDescription;
         FileMetadata.Filename = fileName;        
+        StartedTime = DateTime.UtcNow;
     }
 }

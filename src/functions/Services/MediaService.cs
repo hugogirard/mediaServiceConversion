@@ -11,7 +11,7 @@ namespace Contoso
 {
     public class MediaService : IMediaService
     {
-        private readonly IMediaServiceFactory _mediaServiceFactory;
+        private IMediaServiceFactory _mediaServiceFactory;
         private readonly IMediaServiceConfiguration _configuration;
         private IAzureMediaServicesClient _azureMediaServicesClient;
 
@@ -25,14 +25,19 @@ namespace Contoso
             _configuration = configuration;
         }
 
-        public async Task<VideoEncodingJob> SubmitJobAsync(string videoUrl,
+        public async Task<VideoEncodingJob> SubmitJobAsync(Uri videoUrl,
                                                            string videoName,
                                                            string videoDescription,
                                                            string fileName)
         {
+
+            _azureMediaServicesClient = await _mediaServiceFactory.GetMediaServiceClientAsync();
+
             string uniqueness = Guid.NewGuid().ToString().Substring(0, 13);
             string jobName = $"job-{uniqueness}";
             string outputAssetName = $"output-{uniqueness}";
+
+
 
             var videoEncodingJob = new VideoEncodingJob(fileName, videoName, videoDescription)
             {
@@ -46,14 +51,13 @@ namespace Contoso
                 Transform transform = await CreateTransformAsync();
                 Asset outputAsset = await CreateOutputAssetAsync(outputAssetName);
 
-                var jobInput = new JobInputHttp(files: new[] { videoUrl });
+                var jobInput = new JobInputHttp(files: new[] { videoUrl.ToString() });
 
 
             }
-            catch (Exception ex)
+            catch
             {
-
-                throw ex;
+                throw;
             }
 
             return videoEncodingJob;
@@ -164,3 +168,4 @@ namespace Contoso
             return transform;
         }
     }
+}

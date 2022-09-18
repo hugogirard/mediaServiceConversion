@@ -1,10 +1,11 @@
 ﻿using Contoso.Infrastructure.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace Contoso
 {
     public interface IMediaService
     {
-        Task<VideoEncodingJob> SubmitJobAsync(string videoUrl, string videoName, string videoDescription, string fileName);
+        Task<VideoEncodingJob> SubmitJobAsync(Uri videoUrl, string videoName, string videoDescription, string fileName);
     }
 }

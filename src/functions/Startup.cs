@@ -24,8 +24,8 @@ namespace Contoso
                             .Build());
 
             builder.Services.AddSingleton<IMediaServiceConfiguration>(config);
-            builder.Services.AddSingleton<IMediaServiceFactory, MediaServiceFactory>();
-            builder.Services.AddSingleton<IMediaService, MediaService>();
+            builder.Services.AddScoped<IMediaServiceFactory, MediaServiceFactory>();
+            builder.Services.AddScoped<IMediaService, MediaService>();
 
         }
 
