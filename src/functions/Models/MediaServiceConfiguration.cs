@@ -65,5 +65,10 @@ namespace Contoso
         {
             get { return _config["Location"]; }
         }
+
+        public string StorageAccountName
+        {
+            get { return _config["StorageAccountName"]; }
+        }
     }
 }

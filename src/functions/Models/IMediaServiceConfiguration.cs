@@ -14,5 +14,6 @@ namespace Contoso
         string Location { get; }
         string ResourceGroup { get; }
         string SubscriptionId { get; }
+        string StorageAccountName { get; }
     }
 }
