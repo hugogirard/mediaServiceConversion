@@ -51,8 +51,9 @@ namespace Contoso
                 Transform transform = await CreateTransformAsync();
                 Asset outputAsset = await CreateOutputAssetAsync(outputAssetName);
 
-                var jobInput = new JobInputHttp(files: new[] { videoUrl.ToString() });
-
+                Job job = await SubmitJobAsync(videoUrl.ToString(), jobName, outputAssetName);
+                videoEncodingJob.StartedTime = job.StartTime;
+                videoEncodingJob.State = job.State;
 
             }
             catch

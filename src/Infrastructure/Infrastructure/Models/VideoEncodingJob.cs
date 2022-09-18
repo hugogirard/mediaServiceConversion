@@ -1,4 +1,6 @@
-﻿namespace Contoso.Infrastructure.Models;
+﻿using Microsoft.Azure.Management.Media.Models;
+
+namespace Contoso.Infrastructure.Models;
 
 public class VideoEncodingJob
 {
@@ -8,18 +10,18 @@ public class VideoEncodingJob
 
     public string OutputAssetName { get; set; }
 
-    public DateTime StartedTime { get; set; }
+    public DateTime? StartedTime { get; set; }
 
-    public DateTime CompletedTime { get; set; }
+    public DateTime? CompletedTime { get; set; }
 
     public VideoMetadata FileMetadata { get; set; }
+    public JobState State { get; set; }
 
     public VideoEncodingJob(string fileName, string videoName, string videoDescription)
     {
         FileMetadata = new VideoMetadata();
         FileMetadata.Name = videoName;
         FileMetadata.Description = videoDescription;
-        FileMetadata.Filename = fileName;        
-        StartedTime = DateTime.UtcNow;
+        FileMetadata.Filename = fileName;                
     }
 }
