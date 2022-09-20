@@ -16,6 +16,7 @@ public class VideoEncodingJob
 
     public VideoMetadata FileMetadata { get; set; }
     public JobState State { get; set; }
+    public string Error { get; set; }
 
     public VideoEncodingJob(string fileName, string videoName, string videoDescription)
     {
