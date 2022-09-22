@@ -18,7 +18,6 @@ namespace Contoso
         private readonly string TRANSFORM_NAME = "DefaultTransform";
         private readonly string BUILT_IN_PRESET = "AdaptiveStreaming";
 
-
         public MediaService(IMediaServiceFactory mediaServiceFactory, IMediaServiceConfiguration configuration)
         {
             _mediaServiceFactory = mediaServiceFactory;
@@ -45,7 +44,7 @@ namespace Contoso
                 JobName = jobName,
                 OutputAssetName = outputAssetName
             };
-
+            
             try
             {
                 Transform transform = await CreateTransformAsync();
@@ -63,6 +62,43 @@ namespace Contoso
 
             return videoEncodingJob;
 
+        }
+
+        public async Task<bool> AssetExistAsync(string assetName)
+        {
+            _azureMediaServicesClient = await _mediaServiceFactory.GetMediaServiceClientAsync();
+
+            try
+            {
+                await _azureMediaServicesClient.Assets.GetAsync(_configuration.ResourceGroup,
+                                                _configuration.AccountName,
+                                                assetName);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return true;
+        }
+
+        public async Task<IList<string>> GetStreamingUrlAsync(string assetName)
+        {
+
+            _azureMediaServicesClient = await _mediaServiceFactory.GetMediaServiceClientAsync();
+
+            string streamingEndpointName = $"streaming_endpoint_{assetName}";
+
+            var operation = await _azureMediaServicesClient.StreamingEndpoints.GetWithHttpMessagesAsync(_configuration.ResourceGroup,
+                                                                                                        _configuration.AccountName,
+                                                                                                        streamingEndpointName);
+
+            if (operation.Response.StatusCode == System.Net.HttpStatusCode.Found) 
+            {
+                return null;
+            }
+
+            return null;
         }
 
         private async Task<Job> SubmitJobAsync(string videoUrl, string jobName, string outputAssetName)
