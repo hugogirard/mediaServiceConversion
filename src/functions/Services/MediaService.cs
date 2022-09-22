@@ -1,4 +1,5 @@
 ﻿using Contoso.Infrastructure.Models;
+using Microsoft.Azure.Management.Media;
 using Microsoft.Azure.Management.Media.Models;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -17,6 +18,7 @@ namespace Contoso
 
         private readonly string TRANSFORM_NAME = "DefaultTransform";
         private readonly string BUILT_IN_PRESET = "AdaptiveStreaming";
+        private readonly string DEFAULT_STREAMING_ENDPOINT = "default";
 
         public MediaService(IMediaServiceFactory mediaServiceFactory, IMediaServiceConfiguration configuration)
         {
@@ -74,9 +76,9 @@ namespace Contoso
                                                 _configuration.AccountName,
                                                 assetName);
             }
-            catch (Exception ex)
+            catch (ErrorResponseException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-
+                return false;
             }
 
             return true;
@@ -87,18 +89,71 @@ namespace Contoso
 
             _azureMediaServicesClient = await _mediaServiceFactory.GetMediaServiceClientAsync();
 
-            string streamingEndpointName = $"streaming_endpoint_{assetName}";
 
-            var operation = await _azureMediaServicesClient.StreamingEndpoints.GetWithHttpMessagesAsync(_configuration.ResourceGroup,
-                                                                                                        _configuration.AccountName,
-                                                                                                        streamingEndpointName);
-
-            if (operation.Response.StatusCode == System.Net.HttpStatusCode.Found) 
+            try
             {
-                return null;
+                var locatorName = await CreateStreamingLocatorAsync(assetName);
+                return await GetStreamingEndpointAsync(assetName, locatorName);
+            }
+            catch (Exception ex)
+            {
+
+                
             }
 
             return null;
+        }
+
+        private async Task<IList<string>> GetStreamingEndpointAsync(string assetName, string locatorName)
+        {
+
+            IList<string> streamingUrls = new List<string>();
+
+            var streamingEndpoint = await _azureMediaServicesClient.StreamingEndpoints.GetAsync(_configuration.ResourceGroup,
+                                                                                                _configuration.AccountName,
+                                                                                                DEFAULT_STREAMING_ENDPOINT);
+
+            // Start Streaming Endpoint
+            if (streamingEndpoint.ResourceState != StreamingEndpointResourceState.Running) 
+            {
+                await _azureMediaServicesClient.StreamingEndpoints.StartAsync(_configuration.ResourceGroup,
+                                                                              _configuration.AccountName,
+                                                                              DEFAULT_STREAMING_ENDPOINT);
+            }
+
+            ListPathsResponse paths = await _azureMediaServicesClient.StreamingLocators.ListPathsAsync(_configuration.ResourceGroup,
+                                                                              _configuration.AccountName,
+                                                                              locatorName);
+
+            foreach (StreamingPath path in paths.StreamingPaths)
+            {
+                UriBuilder uriBuilder = new UriBuilder
+                {
+                    Scheme = "https",
+                    Host = streamingEndpoint.HostName,
+
+                    Path = path.Paths[0]
+                };
+                streamingUrls.Add(uriBuilder.ToString());
+            }
+            return streamingUrls;
+        }
+
+        private async Task<string> CreateStreamingLocatorAsync(string assetName) 
+        {
+            string locatorName = $"locator_{assetName}";
+
+            StreamingLocator locator = await _azureMediaServicesClient
+                                                    .StreamingLocators
+                                                    .CreateAsync(_configuration.ResourceGroup,
+                                                                 _configuration.AccountName,
+                                                                 locatorName,
+                                                                 new StreamingLocator
+                                                                 {
+                                                                     AssetName = assetName,
+                                                                     StreamingPolicyName = PredefinedStreamingPolicy.ClearStreamingOnly
+                                                                 });
+            return locatorName;
         }
 
         private async Task<Job> SubmitJobAsync(string videoUrl, string jobName, string outputAssetName)

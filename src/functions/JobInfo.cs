@@ -8,6 +8,8 @@ using Contoso;
 using Contoso.Infrastructure.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
@@ -39,7 +41,11 @@ namespace functions
                                                               collectionName: "mediaInsights",
                                                               ConnectionStringSetting = "CosmosDBConnection",                                                                                              
                                                               Id = "{Query.id}",
-                                                              PartitionKey = "{Query.id}")] VideoEncodingJob videoEncodingJob) 
+                                                              PartitionKey = "{Query.id}")] VideoEncodingJob videoEncodingJob,
+                                                    [CosmosDB(databaseName: "videos",
+                                                              collectionName: "mediaInsights",
+                                                              ConnectionStringSetting = "CosmosDBConnection")]
+                                                              IAsyncCollector<VideoEncodingJob> videos) 
         {
             try
             {
@@ -55,9 +61,10 @@ namespace functions
                 // Get StreamingUrl if job finished processing
                 if (videoEncodingJob.State == JobState.Finished)
                 { 
-                    if (string.IsNullOrEmpty(videoEncodingJob.StreamingLocationUrl)) 
-                    { 
-                        
+                    if (videoEncodingJob.StreamingLocationUrl == null || videoEncodingJob.StreamingLocationUrl.Count() == 0) 
+                    {
+                        videoEncodingJob.StreamingLocationUrl = await _mediaService.GetStreamingUrlAsync(videoEncodingJob.OutputAssetName);
+                        await videos.AddAsync(videoEncodingJob);
                     }
                 }
 
@@ -70,28 +77,34 @@ namespace functions
             }
         }
 
-        //[FunctionName("GetJobs")]
-        //[OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
-        //[OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        //[OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
-        //[OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
-        //public async Task<IActionResult> Run(
-        //    [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req)
-        //{
-        //    _logger.LogInformation("C# HTTP trigger function processed a request.");
+        // This should not be done in production if you have a lot of documents to return
+        // you should return a subset and use pagination
+        [FunctionName("GetJobs")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "GetJobs" })]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]        
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(IEnumerable<VideoEncodingJob>), Description = "The lists of Jobs")]
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
+                                             [CosmosDB(databaseName: "videos",
+                                                       collectionName: "mediaInsights",
+                                                       ConnectionStringSetting = "CosmosDBConnection")] DocumentClient client)
+        {
 
-        //    string name = req.Query["name"];
+            var videoEncodingJobs = new List<VideoEncodingJob>();
 
-        //    string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-        //    dynamic data = JsonConvert.DeserializeObject(requestBody);
-        //    name = name ?? data?.name;
+            Uri collectionUri = UriFactory.CreateDocumentCollectionUri("videos", "mediaInsights");
 
-        //    string responseMessage = string.IsNullOrEmpty(name)
-        //        ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-        //        : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            IDocumentQuery<VideoEncodingJob> query = client.CreateDocumentQuery<VideoEncodingJob>(collectionUri).AsDocumentQuery();
 
-        //    return new OkObjectResult(responseMessage);
-        //}
+            while (query.HasMoreResults)
+            {
+                foreach (VideoEncodingJob result in await query.ExecuteNextAsync())
+                {
+                    videoEncodingJobs.Add(result);
+                }
+            }
+
+            return new OkObjectResult(videoEncodingJobs);
+        }
     }
 }
 

@@ -30,7 +30,7 @@ public class VideoEncodingJob
     public string Error { get; set; }
 
     [JsonProperty("streamingLocationUrl")]
-    public string StreamingLocationUrl { get; set; }
+    public IList<string> StreamingLocationUrl { get; set; }
 
     public VideoEncodingJob(string fileName, string videoName, string videoDescription)
     {
