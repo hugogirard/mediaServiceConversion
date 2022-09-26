@@ -55,6 +55,8 @@ module function 'modules/functions/function.bicep' = {
     cosmosDbName: cosmos.outputs.cosmosDbName
     strMediaName: storage.outputs.strMediaName
     mediaServiceName: mediaService.outputs.mediaServiceName
+    aadClientId: aadClientId
+    aadClientSecret: aadClientSecret
   }
 }
 
