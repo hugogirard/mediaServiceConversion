@@ -34,23 +34,31 @@ namespace Contoso
                                         IAsyncCollector<VideoEncodingJob> videos,
                               ILogger log)
         {
+
+            log.LogDebug($"Received event from storage: {eventGridEvent.EventType}");
+
             // Validate the event type
             if (eventGridEvent.EventType == "Microsoft.Storage.BlobCreated")
             {
+                log.LogDebug("Receveid event Microsoft.Storage.BlobCreated");
+
                 // Retrieve metadata of the video
                 BlobProperties properties = await blobClient.GetPropertiesAsync();
 
                 string videoName = properties.Metadata.FirstOrDefault(d => d.Key == "name").Value;
                 string videoDescription = properties.Metadata.FirstOrDefault(d => d.Key == "description").Value;
 
+                log.LogDebug($"Video name: {videoName}");
+                log.LogDebug($"Video description: {videoDescription}");
+
                 var sasVideo = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read,
                                                          DateTime.UtcNow.AddDays(1));
-
-                log.LogDebug(eventGridEvent.Data.ToString());
-
+  
                 try
                 {
                     VideoEncodingJob videoJobEncoding = await _mediaService.SubmitJobAsync(sasVideo, videoName, videoDescription, blobClient.Name);
+
+                    log.LogDebug($"Video job encoding started: {JsonConvert.SerializeObject(videoJobEncoding)}");
 
                     await videos.AddAsync(videoJobEncoding);
                 }
