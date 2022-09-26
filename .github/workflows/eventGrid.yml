@@ -34,4 +34,4 @@ jobs:
           region: ${{ env.LOCATION }}
           deploymentName:  ${{ env.DEPLOYMENT_NAME }}
           template: ./bicep/event.json
-          parameters: functionId=${{ secrets.AZURE_FUNCTION_ID }} location=${{ env.LOCATION }} storageId=${{ secrets.AZURE_STORAGE_MEDIA_ID }} storageName=${{ secrets.AZURE_STORAGE_MEDIA_NAME }}
+          parameters: spokeRgName=${{ secrets.AZURE_RESOURCE_GROUP_MEDIA_SPOKE_NAME }} functionId=${{ secrets.AZURE_FUNCTION_ID }} location=${{ env.LOCATION }} storageId=${{ secrets.AZURE_STORAGE_MEDIA_ID }} storageName=${{ secrets.AZURE_STORAGE_MEDIA_NAME }}
