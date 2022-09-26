@@ -98,3 +98,4 @@ output storageId string = storage.outputs.strMediaId
 output storageName string = storage.outputs.strMediaName
 output resourceGroupName string = spokeRg.name
 output mediaServiceName string = mediaService.outputs.mediaServiceName
+output mediaId string = mediaService.outputs.mediaId

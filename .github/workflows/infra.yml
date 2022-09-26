@@ -73,6 +73,13 @@ jobs:
           value: ${{ steps.createResources.outputs.resourceGroupName }}
           pa_token: ${{ secrets.PA_TOKEN }}     
 
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_MEDIA_ID
+          value: ${{ steps.createResources.outputs.mediaId }}
+          pa_token: ${{ secrets.PA_TOKEN }}     
+          
+
       - name: start streaming endpoint
         run: |
           az ams streaming-endpoint start --account-name ${{ steps.createResources.outputs.mediaServiceName }} --name ${{ env.STREAMING_ENDPOINT_NAME }} --resource-group ${{ steps.createResources.outputs.resourceGroupName }}
