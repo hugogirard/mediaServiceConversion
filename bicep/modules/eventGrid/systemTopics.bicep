@@ -4,10 +4,11 @@ param functionId string
 param storageId string
 param mediaId string
 
-var topicName = '${storageName}-${guid(subscription().subscriptionId)}'
+var topicNameStorage = '${storageName}-${guid(subscription().subscriptionId)}'
+var topicNameMedia = 'media-${guid(subscription().subscriptionId)}'
 
 resource systemTopicStorage 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
-  name: topicName
+  name: topicNameStorage
   location: location
   properties: {
     source: storageId
@@ -16,7 +17,7 @@ resource systemTopicStorage 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
 }
 
 resource systemTopicMedia 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
-  name: topicName
+  name: topicNameMedia
   location: location
   properties: {
     source: mediaId
@@ -25,7 +26,7 @@ resource systemTopicMedia 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
 }
 
 resource eventSubsStorage 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
-  name: '${topicName}/ToAzureFuncSubsStorage'
+  name: '${topicNameStorage}/ToAzureFuncSubsStorage'
   dependsOn: [
     systemTopicStorage
   ]
@@ -56,9 +57,9 @@ resource eventSubsStorage 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2
 }
 
 resource eventSubsMedia 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
-  name: '${topicName}/ToAzureFuncSubsMedia'
+  name: '${topicNameStorage}/ToAzureFuncSubsMedia'
   dependsOn: [
-    systemTopicStorage
+    systemTopicMedia
   ]
   properties: {
     destination: {
