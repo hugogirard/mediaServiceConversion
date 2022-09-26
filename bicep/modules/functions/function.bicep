@@ -87,7 +87,7 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'CosmosDBConnection'
-          value: cosmos.listConnectionStrings().connectionStrings[0].connectionString}
+          value: cosmos.listConnectionStrings().connectionStrings[0].connectionString
         }
         {
           name: 'SubscriptionId'
