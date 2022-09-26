@@ -75,4 +75,4 @@ jobs:
 
       - name: start streaming endpoint
         run: |
-          az ams streaming-endpoint start --account-name ${{ steps.createResources.outputs.storageName }} --name ${{ env.STREAMING_ENDPOINT_NAME }} --resource-group ${{ steps.createResources.outputs.resourceGroupName }}
+          az ams streaming-endpoint start --account-name ${{ steps.createResources.outputs.mediaServiceName }} --name ${{ env.STREAMING_ENDPOINT_NAME }} --resource-group ${{ steps.createResources.outputs.resourceGroupName }}
