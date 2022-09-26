@@ -44,26 +44,27 @@ namespace Contoso
                 log.LogDebug("Receveid event Microsoft.Storage.BlobCreated");
 
                 // Retrieve metadata of the video
-                // BlobProperties properties = await blobClient.GetPropertiesAsync();
+                BlobProperties properties = await blobClient.GetPropertiesAsync();
 
-                // string videoName = properties.Metadata.FirstOrDefault(d => d.Key == "name").Value;
-                // string videoDescription = properties.Metadata.FirstOrDefault(d => d.Key == "description").Value;
+                string videoName = properties.Metadata.FirstOrDefault(d => d.Key == "name").Value;
+                string videoDescription = properties.Metadata.FirstOrDefault(d => d.Key == "description").Value;
 
-                // log.LogDebug($"Video name: {videoName}");
-                // log.LogDebug($"Video description: {videoDescription}");
+                log.LogDebug($"Video name: {videoName}");
+                log.LogDebug($"Video description: {videoDescription}");
 
-                // var sasVideo = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read,
-                //                                          DateTime.UtcNow.AddDays(1));
+                var sasVideo = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read,
+                                                         DateTime.UtcNow.AddDays(1));
   
                 try
                 {
-                    log.LogDebug($"Data: {JsonConvert.SerializeObject(eventGridEvent)}");
+                    
+                    log.LogDebug("Creating encoding job video");
 
-                    // VideoEncodingJob videoJobEncoding = await _mediaService.SubmitJobAsync(sasVideo, videoName, videoDescription, blobClient.Name);
+                    VideoEncodingJob videoJobEncoding = await _mediaService.SubmitJobAsync(sasVideo, videoName, videoDescription, blobClient.Name);
 
-                    // log.LogDebug($"Video job encoding started: {JsonConvert.SerializeObject(videoJobEncoding)}");
+                    log.LogDebug($"Video job encoding started: {JsonConvert.SerializeObject(videoJobEncoding)}");
 
-                    // await videos.AddAsync(videoJobEncoding);
+                    await videos.AddAsync(videoJobEncoding);
                 }
                 catch (Exception ex)
                 {
