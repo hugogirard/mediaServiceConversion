@@ -1,0 +1,37 @@
+name: Register Subscription Event Grid
+
+on:
+  workflow_dispatch:
+
+jobs:
+  subscribe-storage-events:
+
+    env:
+      DEPLOYMENT_NAME: event-deployment
+      LOCATION: 'eastus'
+    
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}      
+
+      - name: Validate that bicep builds
+        run: bicep build event.bicep
+        working-directory: ./bicep
+
+      - name: deploy
+        id: createResources
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          scope: subscription
+          region: ${{ env.LOCATION }}
+          deploymentName:  ${{ env.DEPLOYMENT_NAME }}
+          template: ./bicep/event.json
+          parameters: functionId=${{ secrets.AZURE_FUNCTION_ID }} location=${{ env.LOCATION }} storageId=${{ secrets.AZURE_STORAGE_MEDIA_ID }} storageName=${{ secrets.AZURE_STORAGE_MEDIA_NAME }}
