@@ -55,6 +55,13 @@ namespace Contoso
                 var sasVideo = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read,
                                                          DateTime.UtcNow.AddDays(1));
   
+                if (sasVideo == null)
+                {
+                    log.LogError("Sas Video cannot be null");
+                    return;
+                }
+
+
                 try
                 {
                     
