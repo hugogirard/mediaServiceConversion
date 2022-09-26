@@ -69,8 +69,9 @@ namespace Contoso
                     await videos.AddAsync(videoJobEncoding);
                 }
                 catch (Exception ex)
-                {
+                {                 
                     log.LogError(ex.Message, ex);
+                    log.LogError(ex.StackTrace);
                 }
 
             }                 
