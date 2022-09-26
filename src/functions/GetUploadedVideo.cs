@@ -27,7 +27,7 @@ namespace Contoso
 
         [FunctionName("GetUploadedVideo")]
         public async Task Run([EventGridTrigger]EventGridEvent eventGridEvent,
-                            //   [Blob("{data.url}", FileAccess.Read, Connection = "StrMediaCnxString")] BlobClient blobClient,
+                              [Blob("{data.url}", FileAccess.Read, Connection = "StrMediaCnxString")] BlobClient blobClient,
                               [CosmosDB(databaseName: "videos",
                                         collectionName: "mediaInsights",
                                         ConnectionStringSetting = "CosmosDBConnection")]
