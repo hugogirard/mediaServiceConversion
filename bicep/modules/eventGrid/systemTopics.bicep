@@ -16,14 +16,14 @@ resource systemTopicStorage 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
   }
 }
 
-// resource systemTopicMedia 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
-//   name: topicNameMedia
-//   location: location
-//   properties: {
-//     source: mediaId
-//     topicType: 'Microsoft.Media.MediaServices'
-//   }
-// }
+resource systemTopicMedia 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
+  name: topicNameMedia
+  location: location
+  properties: {
+    source: mediaId
+    topicType: 'Microsoft.Media.MediaServices'
+  }
+}
 
 resource eventSubsStorage 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
   parent: systemTopicStorage
@@ -54,24 +54,22 @@ resource eventSubsStorage 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2
   }
 }
 
-// resource eventSubsMedia 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
-//   name: '${topicNameMedia}/ToAzureFuncSubsMedia'
-//   dependsOn: [
-//     systemTopicMedia
-//   ]
-//   properties: {
-//     destination: {
-//       properties: {
-//         resourceId: '${functionId}/functions/ProcessMediaServiceEvent'
-//       }
-//       endpointType: 'AzureFunction'
-//     }
-//     filter: {
-//       includedEventTypes: [
-//         'Microsoft.Media.JobStateChange'      
-//       ]
-//       enableAdvancedFilteringOnArrays: false
-//     }
-//     eventDeliverySchema: 'EventGridSchema'    
-//   }
-// }
+resource eventSubsMedia 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
+  parent: systemTopicMedia
+  name: 'ToAzureFuncSubsMedia'  
+  properties: {
+    destination: {
+      properties: {
+        resourceId: '${functionId}/functions/ProcessMediaServiceEvent'
+      }
+      endpointType: 'AzureFunction'
+    }
+    filter: {
+      includedEventTypes: [
+        'Microsoft.Media.JobStateChange'      
+      ]
+      enableAdvancedFilteringOnArrays: false
+    }
+    eventDeliverySchema: 'EventGridSchema'    
+  }
+}
