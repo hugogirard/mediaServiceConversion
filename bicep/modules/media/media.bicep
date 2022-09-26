@@ -19,3 +19,5 @@ resource media 'Microsoft.Media/mediaservices@2021-11-01' = {
     ] 
   }
 }
+
+output mediaServiceName string = media.name

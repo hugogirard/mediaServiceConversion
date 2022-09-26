@@ -2,6 +2,12 @@ targetScope = 'subscription'
 
 param location string
 
+@secure()
+param aadClientId string
+
+@secure()
+param aadClientSecret string
+
 var spokeRgName = 'rg-spoke-media'
 
 var spokeConversionSuffix = uniqueString(spokeRg.id)
@@ -29,17 +35,6 @@ module storage 'modules/storage/storage.bicep' = {
   }
 }
 
-// module logicApp 'modules/logic/logicapp.bicep' = {
-//   scope: resourceGroup(spokeRg.name)
-//   name: 'logicApp'
-//   params: {
-//     appInsightName: monitoring.outputs.insightName
-//     location: location
-//     storageName: storage.outputs.strLogicAppName
-//     suffix: spokeConversionSuffix
-//   }
-// }
-
 module cosmos 'modules/cosmos/cosmos.bicep' = {
   scope: resourceGroup(spokeRg.name)
   name: 'cosmos'
@@ -59,18 +54,19 @@ module function 'modules/functions/function.bicep' = {
     suffix: spokeConversionSuffix
     cosmosDbName: cosmos.outputs.cosmosDbName
     strMediaName: storage.outputs.strMediaName
+    mediaServiceName: mediaService.outputs.mediaServiceName
   }
 }
 
-module webapp 'modules/web/webapp.bicep' = {
-  scope: resourceGroup(spokeRg.name)
-  name: 'webapp'
-  params: {
-    appInsightName: monitoring.outputs.insightName
-    location: location
-    suffix: spokeConversionSuffix
-  }
-}
+// module webapp 'modules/web/webapp.bicep' = {
+//   scope: resourceGroup(spokeRg.name)
+//   name: 'webapp'
+//   params: {
+//     appInsightName: monitoring.outputs.insightName
+//     location: location
+//     suffix: spokeConversionSuffix
+//   }
+// }
 
 module userIdentity 'modules/identity/userassigned.bicep' = {
   scope: resourceGroup(spokeRg.name)

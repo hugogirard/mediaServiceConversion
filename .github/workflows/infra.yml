@@ -40,7 +40,7 @@ jobs:
           region: ${{ env.LOCATION }}
           deploymentName:  ${{ env.DEPLOYMENT_NAME }}
           template: ./bicep/main.json
-          parameters: location=${{ env.LOCATION }}
+          parameters: location=${{ env.LOCATION }} aadClientId=${{ secrets.SP_CLIENT_ID }} aadClientSecret=${{ secrets.SP_CLIENT_SECRET }}
 
       - uses: gliech/create-github-secret-action@v1
         with:

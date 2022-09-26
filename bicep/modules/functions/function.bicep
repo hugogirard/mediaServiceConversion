@@ -4,6 +4,13 @@ param strAccountName string
 param strMediaName string
 param appInsightName string
 param cosmosDbName string
+param mediaServiceName string
+
+@secure()
+param aadClientId string
+
+@secure()
+param aadClientSecret string
 
 var appServiceName = 'plan-function-${suffix}'
 
@@ -81,6 +88,46 @@ resource function 'Microsoft.Web/sites@2020-06-01' = {
         {
           name: 'CosmosDBConnection'
           value: '${cosmos.listConnectionStrings().connectionStrings}'
+        }
+        {
+          name: 'SubscriptionId'
+          value: subscription().subscriptionId
+        }
+        {
+          name: 'ResourceGroup'
+          value: resourceGroup().name
+        }
+        {
+          name: 'AccountName'
+          value: mediaServiceName
+        }
+        {
+          name: 'AadTenantId'
+          value: subscription().tenantId
+        }
+        {
+          name: 'AadClientId'
+          value: aadClientId
+        }
+        {
+          name: 'AadSecret'
+          value: aadClientSecret
+        }
+        {
+          name: 'ArmAadAudience'
+          value: 'https://management.core.windows.net/'
+        }
+        {
+          name: 'AadEndpoint'
+          value: 'https://management.azure.com/'
+        }
+        {
+          name: 'Location'
+          value: resourceGroup().location
+        }
+        {
+          name: 'StorageAccountName'
+          value: strMediaName
         }
       ]
     }
