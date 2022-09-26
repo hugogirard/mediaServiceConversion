@@ -1,15 +1,6 @@
 name: Create Azure Resources
 
-on:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "bicep/**/*.bicep"
-      - ".github/workflows/infra.yml"
-    paths-ignore:
-      - "bicep/**/event.bicep"
-      - "bicep/modules/eventGrid/**"
+on:  
   workflow_dispatch:
 
 jobs:
