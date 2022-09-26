@@ -36,6 +36,7 @@ namespace Contoso
         {
 
             log.LogDebug($"Received event from storage: {eventGridEvent.EventType}");
+            log.LogDebug($"Data of the event: {eventGridEvent.Data.ToString()}");
 
             // Validate the event type
             if (eventGridEvent.EventType == "Microsoft.Storage.BlobCreated")
