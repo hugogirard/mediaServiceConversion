@@ -15,6 +15,7 @@ jobs:
     env:
       DEPLOYMENT_NAME: conversion-deployment
       LOCATION: 'eastus'
+      STREAMING_ENDPOINT_NAME: 'default'
     
     runs-on: ubuntu-latest
 
@@ -70,4 +71,8 @@ jobs:
         with:
           name: AZURE_RESOURCE_GROUP_MEDIA_SPOKE_NAME
           value: ${{ steps.createResources.outputs.resourceGroupName }}
-          pa_token: ${{ secrets.PA_TOKEN }}                   
+          pa_token: ${{ secrets.PA_TOKEN }}     
+
+      - name: start streaming endpoint
+        run: |
+          az ams streaming-endpoint start --account-name ${{ steps.createResources.outputs.storageName }} --name ${{ env.STREAMING_ENDPOINT_NAME }} --resource-group ${{ steps.createResources.outputs.resourceGroupName }}
