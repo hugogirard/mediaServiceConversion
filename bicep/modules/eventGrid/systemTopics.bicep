@@ -22,7 +22,7 @@ resource eventSubs 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-
   properties: {
     destination: {
       properties: {
-        resourceId: '${functionId}/functions/ProcessFile'
+        resourceId: '${functionId}/functions/GetUploadedVideo'
       }
       endpointType: 'AzureFunction'
     }
