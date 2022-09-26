@@ -56,6 +56,11 @@ namespace Contoso
             get { return new Uri(_config["AadEndpoint"]); }
         }
 
+        public Uri ArmEndpoint
+        {
+            get { return new Uri(_config["ArmEndpoint"]); }
+        }
+
         public string Location
         {
             get { return _config["Location"]; }
