@@ -36,6 +36,7 @@ namespace Contoso
         {
 
             log.LogDebug($"Received event from storage: {eventGridEvent.EventType}");
+            log.LogDebug($"Data of the event: {eventGridEvent.Data.ToString()}");
 
             // Validate the event type
             if (eventGridEvent.EventType == "Microsoft.Storage.BlobCreated")
@@ -53,9 +54,14 @@ namespace Contoso
 
                 var sasVideo = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read,
                                                          DateTime.UtcNow.AddDays(1));
-  
+
+                log.LogDebug($"Sas Key: {sasVideo}");
+
                 try
                 {
+                    
+                    log.LogDebug("Creating encoding job video");
+
                     VideoEncodingJob videoJobEncoding = await _mediaService.SubmitJobAsync(sasVideo, videoName, videoDescription, blobClient.Name);
 
                     log.LogDebug($"Video job encoding started: {JsonConvert.SerializeObject(videoJobEncoding)}");
@@ -63,8 +69,9 @@ namespace Contoso
                     await videos.AddAsync(videoJobEncoding);
                 }
                 catch (Exception ex)
-                {
+                {                 
                     log.LogError(ex.Message, ex);
+                    log.LogError(ex.StackTrace);
                 }
 
             }                 

@@ -2,11 +2,13 @@ param location string
 param storageName string
 param functionId string
 param storageId string
+param mediaId string
 
-var topicName = '${storageName}-${guid(subscription().subscriptionId)}'
+var topicNameStorage = '${storageName}-${guid(subscription().subscriptionId)}'
+var topicNameMedia = 'media-${guid(subscription().subscriptionId)}'
 
-resource systemTopic 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
-  name: topicName
+resource systemTopicStorage 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
+  name: topicNameStorage
   location: location
   properties: {
     source: storageId
@@ -14,11 +16,18 @@ resource systemTopic 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
   }
 }
 
-resource eventSubs 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
-  name: '${topicName}/ToAzureFuncSubs'
-  dependsOn: [
-    systemTopic
-  ]
+resource systemTopicMedia 'Microsoft.EventGrid/systemTopics@2021-12-01' = {
+  name: topicNameMedia
+  location: location
+  properties: {
+    source: mediaId
+    topicType: 'Microsoft.Media.MediaServices'
+  }
+}
+
+resource eventSubsStorage 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
+  parent: systemTopicStorage
+  name: 'ToAzureFuncSubsStorage'  
   properties: {
     destination: {
       properties: {
@@ -40,6 +49,26 @@ resource eventSubs 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-
           key: 'Subject'
         }        
       ]
+    }
+    eventDeliverySchema: 'EventGridSchema'    
+  }
+}
+
+resource eventSubsMedia 'Microsoft.EventGrid/systemTopics/eventSubscriptions@2020-10-15-preview' = {
+  parent: systemTopicMedia
+  name: 'ToAzureFuncSubsMedia'  
+  properties: {
+    destination: {
+      properties: {
+        resourceId: '${functionId}/functions/ProcessMediaServiceEvent'
+      }
+      endpointType: 'AzureFunction'
+    }
+    filter: {
+      includedEventTypes: [
+        'Microsoft.Media.JobStateChange'      
+      ]
+      enableAdvancedFilteringOnArrays: false
     }
     eventDeliverySchema: 'EventGridSchema'    
   }

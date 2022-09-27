@@ -1,12 +1,6 @@
 name: Create Azure Resources
 
-on:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "bicep/**/*.bicep"
-      - ".github/workflows/infra.yml"
+on:  
   workflow_dispatch:
 
 jobs:
@@ -72,6 +66,13 @@ jobs:
           name: AZURE_RESOURCE_GROUP_MEDIA_SPOKE_NAME
           value: ${{ steps.createResources.outputs.resourceGroupName }}
           pa_token: ${{ secrets.PA_TOKEN }}     
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: AZURE_MEDIA_ID
+          value: ${{ steps.createResources.outputs.mediaId }}
+          pa_token: ${{ secrets.PA_TOKEN }}     
+          
 
       - name: start streaming endpoint
         run: |
