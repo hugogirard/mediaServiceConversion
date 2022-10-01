@@ -53,6 +53,8 @@ namespace functions
 
                         foreach (VideoEncodingJob video in await query.ExecuteNextAsync())
                         {
+                            log.LogDebug($"Get document: {video.Id}");
+
                             // Updating the video status
                             dynamic data = JsonConvert.DeserializeObject(eventGridEvent.Data.ToString());
 
