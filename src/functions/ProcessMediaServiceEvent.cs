@@ -29,9 +29,11 @@ namespace functions
         {
             // Get job ID (primary key of CosmosDB)
             var jobId = eventGridEvent.Subject.Split('/').Last();
+            var documentId = jobId.Replace("job-", "");
             
             log.LogDebug($"Receive event: {eventGridEvent.EventType}");
             log.LogDebug($"Job ID: {jobId}");
+            log.LogDebug($"Document ID: {documentId}");
 
             log.LogDebug($"{eventGridEvent.Data.ToString()}");
 
@@ -43,8 +45,8 @@ namespace functions
 
                     // Retrieve the document and update it
                     IDocumentQuery<VideoEncodingJob> query = client.CreateDocumentQuery<VideoEncodingJob>(collectionUri)
-                                                                .Where(p => p.Id == jobId)
-                                                                .AsDocumentQuery();
+                                                                   .Where(p => p.Id == documentId)
+                                                                   .AsDocumentQuery();
 
                     // This should return only one document
                     while (query.HasMoreResults)
