@@ -31,7 +31,9 @@ namespace functions
             var jobId = eventGridEvent.Subject.Split('/').Last();
             
             log.LogDebug($"Receive event: {eventGridEvent.EventType}");
-            log.LogDebug($"Job ID: ${jobId}");
+            log.LogDebug($"Job ID: {jobId}");
+
+            log.LogDebug($"{eventGridEvent.Data.ToString()}");
 
             if (eventGridEvent.EventType == "Microsoft.Media.JobStateChange") 
             {
@@ -70,6 +72,7 @@ namespace functions
                             else 
                             {
                                 video.Error = $"Not state in event: {data}";
+                                log.LogError($"Not state in event: {data}");
                             }
 
                             await videos.AddAsync(video);
