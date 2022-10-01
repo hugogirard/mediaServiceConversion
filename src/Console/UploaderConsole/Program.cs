@@ -36,6 +36,9 @@ namespace UploaderConsole
             }
 
             await blob.SetMetadataAsync(metadata);
+
+            Console.WriteLine("Upload completed, press a key to continue");
+            
         }
     }
 }

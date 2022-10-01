@@ -31,6 +31,7 @@ namespace functions
             var jobId = eventGridEvent.Subject.Split('/').Last();
             
             log.LogDebug($"Receive event: {eventGridEvent.EventType}");
+            log.LogDebug($"Job ID: ${jobId}");
 
             if (eventGridEvent.EventType == "Microsoft.Media.JobStateChange") 
             {
@@ -46,6 +47,8 @@ namespace functions
                     // This should return only one document
                     while (query.HasMoreResults)
                     {
+                        log.LogDebug("Document found in CosmosDB");
+
                         foreach (VideoEncodingJob video in await query.ExecuteNextAsync())
                         {
                             // Updating the video status
@@ -55,11 +58,13 @@ namespace functions
                             {
                                 if (Enum.TryParse(data.state, out JobState newState))
                                 {
+                                    log.LogDebug($"Document new state: {newState}");
                                     video.State = newState;
                                 }
                                 else 
                                 {
                                     video.Error = $"Cannot parse state in event: {data}";
+                                    log.LogError($"Cannot update state for document :{jobId}");
                                 }
                             }
                             else 

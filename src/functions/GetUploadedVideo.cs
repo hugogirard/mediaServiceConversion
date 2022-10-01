@@ -55,8 +55,6 @@ namespace Contoso
                 var sasVideo = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read,
                                                          DateTime.UtcNow.AddDays(1));
 
-                log.LogDebug($"Sas Key: {sasVideo}");
-
                 try
                 {
                     
