@@ -11,6 +11,7 @@ using System.Linq;
 using Microsoft.Azure.Documents.Linq;
 using Contoso.Infrastructure.Models;
 using System.Threading.Tasks;
+using functions.Models;
 
 namespace functions
 {
@@ -58,27 +59,18 @@ namespace functions
                             log.LogDebug($"Get document: {video.Id}");
 
                             // Updating the video status
-                            dynamic data = JsonConvert.DeserializeObject(eventGridEvent.Data.ToString());
-
-                            if (!string.IsNullOrEmpty(data?.state))
+                            var jobStateEvent = JsonConvert.DeserializeObject<JobStateEvent>(eventGridEvent.Data.ToString());
+  
+                            if (Enum.TryParse(jobStateEvent.State, out JobState newState))
                             {
-                                if (Enum.TryParse(data.state, out JobState newState))
-                                {
-                                    log.LogDebug($"Document new state: {newState}");
-                                    video.State = newState;
-                                }
-                                else 
-                                {
-                                    video.Error = $"Cannot parse state in event: {data}";
-                                    log.LogError($"Cannot update state for document :{jobId}");
-                                }
+                                log.LogDebug($"Document new state: {newState}");
+                                video.State = newState;
                             }
                             else 
                             {
-                                video.Error = $"Not state in event: {data}";
-                                log.LogError($"Not state in event: {data}");
+                                log.LogError($"Cannot update state for document :{jobId}");
                             }
-
+        
                             await videos.AddAsync(video);
 
                             break;
