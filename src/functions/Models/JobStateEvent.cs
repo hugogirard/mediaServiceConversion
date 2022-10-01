@@ -10,9 +10,9 @@ namespace functions.Models
     public class JobStateEvent
     {
         [JsonProperty("PreviousState")]
-        public string PreviousState { get; set; }
+        public JobState PreviousState { get; set; }
 
         [JsonProperty("State")]
-        public string State { get; set; }
+        public JobState State { get; set; }
     }
 }

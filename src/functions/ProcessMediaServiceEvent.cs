@@ -12,11 +12,19 @@ using Microsoft.Azure.Documents.Linq;
 using Contoso.Infrastructure.Models;
 using System.Threading.Tasks;
 using functions.Models;
+using Contoso;
 
 namespace functions
 {
     public class ProcessMediaServiceEvent
     {
+        private readonly IMediaService _mediaService;
+
+        public ProcessMediaServiceEvent(IMediaService mediaService)
+        {
+            _mediaService = mediaService;
+        }
+
         [FunctionName("ProcessMediaServiceEvent")]
         public async Task Run([EventGridTrigger]EventGridEvent eventGridEvent,
                                [CosmosDB(databaseName: "videos",
@@ -60,21 +68,19 @@ namespace functions
 
                             // Updating the video status
                             var jobStateEvent = JsonConvert.DeserializeObject<JobStateEvent>(eventGridEvent.Data.ToString());
-  
-                            if (Enum.TryParse(jobStateEvent.State, out JobState newState))
+                            video.State = jobStateEvent.State;
+
+                            // Get Streaming Url if job finished successfully
+                            if (jobStateEvent.State == JobState.Finished) 
                             {
-                                log.LogDebug($"Document new state: {newState}");
-                                video.State = newState;
+                                video.StreamingLocationUrl = await _mediaService.GetStreamingUrlAsync(video.OutputAssetName);
                             }
-                            else 
-                            {
-                                log.LogError($"Cannot update state for document :{jobId}");
-                            }
-        
+
                             await videos.AddAsync(video);
 
                             break;
                         }
+                        
                     }                                                                         
                 }
                 catch (System.Exception ex)
