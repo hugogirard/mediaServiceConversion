@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Console", "Console", "{3A71CAB0-7C02-4B39-935C-142A328D8951}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UploaderConsole", "Console\UploaderConsole\UploaderConsole.csproj", "{7247CDBC-00F7-423A-91BF-15719636EA64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UploaderConsole", "Console\UploaderConsole\UploaderConsole.csproj", "{7247CDBC-00F7-423A-91BF-15719636EA64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

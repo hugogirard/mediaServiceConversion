@@ -15,5 +15,9 @@ namespace Contoso
         string ResourceGroup { get; }
         string SubscriptionId { get; }
         string StorageAccountName { get; }
+
+        string UploadVideoStorageAccount { get; }
+
+        string UploadVideoContainer { get; }
     }
 }

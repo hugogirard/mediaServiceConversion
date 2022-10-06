@@ -1,4 +1,6 @@
-﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+﻿using Azure.Storage.Blobs;
+using functions.Services;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -26,6 +28,7 @@ namespace Contoso
             builder.Services.AddSingleton<IMediaServiceConfiguration>(config);
             builder.Services.AddScoped<IMediaServiceFactory, MediaServiceFactory>();
             builder.Services.AddScoped<IMediaService, MediaService>();
+            builder.Services.AddSingleton<IStorageService, StorageService>();
 
         }
 

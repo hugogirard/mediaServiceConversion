@@ -1,4 +1,6 @@
 ﻿using Contoso.Infrastructure.Models;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Management.Media;
 using Microsoft.Azure.Management.Media.Models;
 using Microsoft.Extensions.Configuration;
@@ -14,16 +16,20 @@ namespace Contoso
     {
         private IMediaServiceFactory _mediaServiceFactory;
         private readonly IMediaServiceConfiguration _configuration;
+        private readonly TelemetryClient _telemetryClient;
         private IAzureMediaServicesClient _azureMediaServicesClient;
 
         private readonly string TRANSFORM_NAME = "DefaultTransform";
         private readonly string BUILT_IN_PRESET = "AdaptiveStreaming";
         private readonly string DEFAULT_STREAMING_ENDPOINT = "default";
 
-        public MediaService(IMediaServiceFactory mediaServiceFactory, IMediaServiceConfiguration configuration)
+        public MediaService(IMediaServiceFactory mediaServiceFactory, 
+                            IMediaServiceConfiguration configuration,
+                            TelemetryClient telemetryClient)
         {
             _mediaServiceFactory = mediaServiceFactory;
             _configuration = configuration;
+            _telemetryClient = telemetryClient;
         }
 
         public async Task<VideoEncodingJob> SubmitJobAsync(Uri videoUrl,

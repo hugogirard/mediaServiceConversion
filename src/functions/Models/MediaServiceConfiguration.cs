@@ -70,5 +70,12 @@ namespace Contoso
         {
             get { return _config["StorageAccountName"]; }
         }
+
+        public string UploadVideoStorageAccount
+        {
+            get { return _config["StrMediaCnxString"]; }
+        }
+
+        public string UploadVideoContainer => "video";
     }
 }
