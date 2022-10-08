@@ -1,0 +1,13 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "spoke-media-web-app": {
+      "appLocation": ".",
+      "outputLocation": "."
+    },
+    "spoke-media-frontend": {
+      "appLocation": ".",
+      "outputLocation": "."
+    }
+  }
+}
