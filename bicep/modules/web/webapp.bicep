@@ -19,37 +19,37 @@ resource serverFarm 'Microsoft.Web/serverfarms@2020-06-01' = {
   kind: 'app'
 }
 
-resource webApp 'Microsoft.Web/sites@2020-06-01' = {
-  name: 'webapp-${suffix}'
-  location: location  
-  properties: {
-    serverFarmId: serverFarm.id    
-    siteConfig: {
-      appSettings: [
-        {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: appInsights.properties.InstrumentationKey
-        }
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: appInsights.properties.ConnectionString
-        }
-        {
-          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-          value: '~2'
-        }        
-      ]
-      vnetRouteAllEnabled: true
-      metadata: [
-        {
-          name: 'CURRENT_STACK'
-          value: 'dotnet'
-        }
-      ]
-      netFrameworkVersion: 'v6.0'
-      alwaysOn: true      
-    }    
-    clientAffinityEnabled: false
-    httpsOnly: true
-  }  
-}
+// resource webApp 'Microsoft.Web/sites@2020-06-01' = {
+//   name: 'frontend-${suffix}'
+//   location: location  
+//   properties: {
+//     serverFarmId: serverFarm.id    
+//     siteConfig: {
+//       appSettings: [
+//         {
+//           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+//           value: appInsights.properties.InstrumentationKey
+//         }
+//         {
+//           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+//           value: appInsights.properties.ConnectionString
+//         }
+//         {
+//           name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
+//           value: '~2'
+//         }        
+//       ]
+//       vnetRouteAllEnabled: true
+//       metadata: [
+//         {
+//           name: 'CURRENT_STACK'
+//           value: 'dotnet'
+//         }
+//       ]
+//       netFrameworkVersion: 'v6.0'
+//       alwaysOn: true      
+//     }    
+//     clientAffinityEnabled: false
+//     httpsOnly: true
+//   }  
+// }

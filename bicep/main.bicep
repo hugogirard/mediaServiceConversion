@@ -60,15 +60,15 @@ module function 'modules/functions/function.bicep' = {
   }
 }
 
-// module webapp 'modules/web/webapp.bicep' = {
-//   scope: resourceGroup(spokeRg.name)
-//   name: 'webapp'
-//   params: {
-//     appInsightName: monitoring.outputs.insightName
-//     location: location
-//     suffix: spokeConversionSuffix
-//   }
-// }
+module webapp 'modules/web/webapp.bicep' = {
+  scope: resourceGroup(spokeRg.name)
+  name: 'webapp'
+  params: {
+    appInsightName: monitoring.outputs.insightName
+    location: location
+    suffix: spokeConversionSuffix
+  }
+}
 
 module userIdentity 'modules/identity/userassigned.bicep' = {
   scope: resourceGroup(spokeRg.name)
