@@ -1,0 +1,27 @@
+{
+  "name": "azure-blobs-javascript",
+  "version": "1.0.0",
+  "description": "Vanilla JS Azure Storage Blob web site. ",
+  "source": [
+    "./index.js"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "parcel ./index.html"
+  },
+  "license": "MIT",
+  "browserslist": [
+    "last 1 Edge version",
+    "last 1 Chrome version",
+    "last 1 Firefox version",
+    "last 1 safari version",
+    "last 1 webkit version"
+  ],
+  "dependencies": {
+    "@azure/storage-blob": "^12.8.0"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "parcel": "^2.3.2"
+  }
+}
