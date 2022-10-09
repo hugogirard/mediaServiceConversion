@@ -1,0 +1,51 @@
+﻿@page "/"
+@inject IVideoService videoService
+
+@if (VideoEncodingJobs != null) 
+{
+    <div class=row style="margin-top:30px">
+        <div class=col-md-12>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">JobName</th>
+                        <th scope="col">OutputAssetName</th>
+                        <th scope="col">State</th>
+                        <th></th>                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var job in VideoEncodingJobs)
+                    {
+                        <tr>
+                            <td>@job.Id</td>
+                            <td>@job.JobName</td>
+                            <td>@job.OutputAssetName</td>
+                            <td>@job.State</td>
+                            <td>
+                                <button class="btn btn-primary" @onclick="(() => OnPlayVideo(job))">
+                                    PLAY
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+
+    public IEnumerable<VideoEncodingJob> VideoEncodingJobs { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        VideoEncodingJobs = await videoService.GetJobs();
+    }
+
+    private async Task OnPlayVideo(VideoEncodingJob vsideoEncodingJob)
+    {
+    }
+}
