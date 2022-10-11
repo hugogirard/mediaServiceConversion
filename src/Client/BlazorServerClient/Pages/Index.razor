@@ -1,8 +1,16 @@
 ﻿@page "/"
 @inject IVideoService videoService
+@inject IJSRuntime jsRuntime
+@inject NavigationManager navigationManager
+
 
 @if (VideoEncodingJobs != null) 
 {
+    <div class="row">
+        <div class="col-md-1">
+            <button class="btn btn-primary" @onclick="Refresh">REFRESH</button>
+        </div>        
+    </div>
     <div class=row style="margin-top:30px">
         <div class=col-md-12>
             <table class="table table-striped table-hover">
@@ -45,7 +53,24 @@
         VideoEncodingJobs = await videoService.GetJobs();
     }
 
-    private async Task OnPlayVideo(VideoEncodingJob vsideoEncodingJob)
+    private async Task Refresh() 
+    { 
+        VideoEncodingJobs = await videoService.GetJobs();
+    }
+
+    private async Task OnPlayVideo(VideoEncodingJob videoEncodingJob)
     {
+        //var vm = new PlayVideoViewModel
+        //{
+        //    Id = videoEncodingJob.Id,
+        //    StreamingUrl = videoEncodingJob.StreamingLocationUrl[2]
+        //};
+
+        // Get the streaming without specific format
+        //var streamingEndpoint = videoEncodingJob.StreamingLocationUrl.FirstOrDefault(s => !s.Contains("format"));
+
+        //await LocalStorage.SetAsync(jsRuntime, "video", streamingEndpoint);
+        
+        navigationManager.NavigateTo($"{navigationManager.BaseUri}playvideo?id={videoEncodingJob.Id}", true);
     }
 }

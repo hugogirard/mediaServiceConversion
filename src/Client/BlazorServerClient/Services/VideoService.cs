@@ -41,25 +41,6 @@ public class VideoService : IVideoService
         
     }
 
-    //public async Task<string> GetUploadSasUrl(string name)
-    //{
-    //    string url = $"{BASE_URL}/GetModel?name={name}";
-
-    //    HttpResponseMessage response = await SendRequestAsync(url, HttpMethod.Get);
-
-    //    if (response.IsSuccessStatusCode)
-    //    {
-    //        string json = await response.Content.ReadAsStringAsync();
-    //        //return JsonSerializer.Deserialize<IList<ModelInfo>>(json, new JsonSerializerOptions
-    //        //{
-    //        //    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-    //        //});
-
-    //    }
-
-    //    return string.Empty;
-    //}
-
     public async Task<IEnumerable<VideoEncodingJob>> GetJobs()
     {
         string url = $"{BASE_URL}/GetJobs";
@@ -73,6 +54,22 @@ public class VideoService : IVideoService
         }
 
         return new List<VideoEncodingJob>();
+    }
+
+    public async Task<VideoEncodingJob?> GetJob(string id) 
+    {
+        string url = $"{BASE_URL}/GetJobById?id={id}";
+
+        HttpResponseMessage response = await SendRequestAsync(url, HttpMethod.Get);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<VideoEncodingJob>(json);
+        }
+
+        return null;
+
     }
 
     private async Task<HttpResponseMessage> SendRequestAsync(string url, HttpMethod method)

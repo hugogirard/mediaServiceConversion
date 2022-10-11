@@ -8,7 +8,7 @@ namespace BlazorServerClient.Services
         Task<IEnumerable<VideoEncodingJob>> GetJobs();
 
         Task UploadVideoAsync(FileUploadViewModel vm, string fileName, Stream content);
-
-        //Task<string> GetUploadSasUrl(string name);
+        
+        Task<VideoEncodingJob?> GetJob(string id);        
     }
 }

@@ -1,0 +1,16 @@
+﻿@page "/playvideo"
+
+@model BlazorServerClient.Pages.PlayVideoModel
+
+@{
+    Layout = "_LayoutRazor";
+}
+
+@*<video id="vid1"></video>*@
+
+<video id="vid1" class="azuremediaplayer amp-default-skin" autoplay controls width="640" height="400" poster="poster.jpg" data-setup='{"nativeControlsForTouch": false}'>
+    <source src="@Model.VM.StreamingUrl" type="application/vnd.ms-sstr+xml" />
+    <p class="amp-no-js">
+        To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+    </p>
+</video>

@@ -8,6 +8,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<IVideoService, VideoService>();
+builder.Services.AddScoped<ISessionStateService, SessionStateService>();
 
 var app = builder.Build();
 
