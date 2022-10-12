@@ -33,11 +33,10 @@ public class VideoService : IVideoService
         metadata.Add("description", vm.Description);
 
         BlobClient blob = _container.GetBlobClient(fileName);
-        
-        await blob.SetMetadataAsync(metadata);
-
+                
         await blob.UploadAsync(content, true);
         
+        await blob.SetMetadataAsync(metadata);
         
     }
 
