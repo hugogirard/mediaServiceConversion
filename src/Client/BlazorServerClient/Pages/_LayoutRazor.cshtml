@@ -4,39 +4,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PlayVideo</title>
+    <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />    
+    <link href="css/PlayVideo.css" rel="stylesheet" />
     <link href="BlazorServerClient.styles.css" rel="stylesheet" />
     <link href="//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
 </head>
 <body>
-
     <div class="page">
-@*        <div class="sidebar">
-            <div class="@NavMenuCssClass">
-                <nav class="flex-column">
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                            <span class="oi oi-video" aria-hidden="true"></span> Videos
-                        </NavLink>
-                        <NavLink class="nav-link" href="upload">
-                            <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Upload Video
-                        </NavLink>
-                        <NavLink class="nav-link" href="playvideo">
-                            <span class="oi oi-data-transfer-upload" aria-hidden="true"></span> Upload Video
-                        </NavLink>
-                    </div>
-                </nav>
-            </div>
-        </div>*@
-
+        <div class="sidebar">
+            @(await Html.RenderComponentAsync<BlazorServerClient.Shared.NavMenu>(RenderMode.Server))
+        </div>
         <main>
             <article class="content px-4">
                 @RenderBody()
             </article>
         </main>
     </div>
-    <script src="~/videoPlayer.js"></script>        
+    <script src="~/videoPlayer.js"></script>
+    <script src="_framework/blazor.server.js"></script>
     <script src="//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
 </body>
 </html>
