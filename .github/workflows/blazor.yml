@@ -1,0 +1,44 @@
+name: Deploy Blazor Client
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-deploy-blazor:
+    runs-on: ubuntu-latest
+
+    env:
+      RG_NAME: 'rg-spoke-media'         
+      AZURE_WEBAPP_PACKAGE_PATH: 'src/Client/BlazorServerClient'    
+      DOTNET_VERSION: '6.0.x'              
+
+    steps:
+      
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS  }}
+
+      - name: Setup DotNet 6.0.X Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: dotnet build and publish
+        run: |
+          pushd './${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish -c Release -o output          
+          
+      - name: 'Run Azure webapp deploy action using publish profile credentials'
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{ secrets.BLAZOR_CLIENT }}
+          package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/output' 
+
+      - name: logout
+        run: |
+          az logout     
