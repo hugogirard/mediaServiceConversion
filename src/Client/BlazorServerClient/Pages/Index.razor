@@ -3,6 +3,7 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navigationManager
 
+<Loading IsLoading="IsLoading" />
 
 @if (VideoEncodingJobs != null) 
 {
@@ -32,9 +33,12 @@
                             <td>@job.OutputAssetName</td>
                             <td>@job.State</td>
                             <td>
-                                <button class="btn btn-primary" @onclick="(() => OnPlayVideo(job))">
-                                    PLAY
-                                </button>
+                                @if (job.State == JobState.Finished)
+                                {
+                                    <button class="btn btn-primary" @onclick="(() => OnPlayVideo(job))">
+                                        PLAY
+                                    </button>
+                                }
                             </td>
                         </tr>
                     }
@@ -48,29 +52,24 @@
 
     public IEnumerable<VideoEncodingJob> VideoEncodingJobs { get; set; }
 
+    private bool IsLoading { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        IsLoading = true;
         VideoEncodingJobs = await videoService.GetJobs();
+        IsLoading = false;
     }
 
     private async Task Refresh() 
     { 
+        IsLoading = true;
         VideoEncodingJobs = await videoService.GetJobs();
+        IsLoading = false;
     }
 
     private async Task OnPlayVideo(VideoEncodingJob videoEncodingJob)
-    {
-        //var vm = new PlayVideoViewModel
-        //{
-        //    Id = videoEncodingJob.Id,
-        //    StreamingUrl = videoEncodingJob.StreamingLocationUrl[2]
-        //};
-
-        // Get the streaming without specific format
-        //var streamingEndpoint = videoEncodingJob.StreamingLocationUrl.FirstOrDefault(s => !s.Contains("format"));
-
-        //await LocalStorage.SetAsync(jsRuntime, "video", streamingEndpoint);
-        
+    {        
         navigationManager.NavigateTo($"{navigationManager.BaseUri}playvideo?id={videoEncodingJob.Id}", true);
     }
 }

@@ -1,5 +1,8 @@
 ﻿@page "/upload"
 @inject IVideoService videoService
+@inject NavigationManager navigationManager
+
+<Loading IsLoading="IsLoading" />
 
 @if (ShowError)
 {
@@ -33,6 +36,9 @@
 
     private bool ShowError = false;
     private string ErrorMsg = string.Empty;
+
+    private bool IsLoading = false;
+
     const int MaxFileSize = 50 * 1024 * 1024; // 50MB
     private IBrowserFile UploadedFile = null;
 
@@ -75,6 +81,8 @@
 
     async Task FormSubmitted()
     {
+        IsLoading = true;
+
         if (string.IsNullOrEmpty(VM.Name)) 
         {
             ShowError = true;
@@ -105,5 +113,7 @@
             ShowError = false;
         }
 
+        IsLoading = false;
+        navigationManager.NavigateTo("/");
     }
 }
